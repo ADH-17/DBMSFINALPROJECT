@@ -54,6 +54,6 @@ INSERT INTO groups (group_name) VALUES
 
 -- GROUP MEMBERSHIP 
 INSERT INTO group_membership (user_id, group_id) VALUES
-(1, 1),  -- Ayden joins Recovery Group
-(2, 2),  -- Bob joins Study Group
-(3, 3);  -- Alice joins Fitness Group
+(1, 1), 
+(2, 2),  
+(3, 3); 
