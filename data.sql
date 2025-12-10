@@ -59,7 +59,7 @@ CREATE TABLE research (
 CREATE TABLE friend (
   user_id_1 INT NOT NULL REFERENCES users(user_id),
   user_id_2 INT NOT NULL REFERENCES users(user_id),
-  is_friend BOOLEAN NOT NULL DEFAULT TRUE,
+  is_friend BOOLEAN NOT NULL DEFAULT FALSE,
   PRIMARY KEY (user_id_1, user_id_2)
 );
 
