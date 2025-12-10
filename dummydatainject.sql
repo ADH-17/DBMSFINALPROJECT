@@ -26,7 +26,7 @@ INSERT INTO comment (created_by, post_id, visible, body) VALUES
 
 -- RESEARCH PAPERS 
 INSERT INTO research (title, author, url, tag) VALUES
-('Cognitive Load in UI Design', 'Dr. Smith', 'http://paper.com/ui', 'design'),
+('Cognitive Load in UI Design', 'Dr. Smith', 'http://paper.com/ui', 'design'), -- might want to actually put real papers in here eventually idk
 ('Database Indexing Basics', 'Prof. Adams', 'http://paper.com/db', 'database'),
 ('Social Media Addiction Study', 'Dr. Barnes', 'http://paper.com/social', 'mental'),
 ('Effects of Screens on Sleep', 'Dr. Karl', 'http://paper.com/sleep', 'health');
