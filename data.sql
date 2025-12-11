@@ -1,14 +1,4 @@
-DROP TABLE IF EXISTS 
-  friend_requests,
-  friend,
-  likes,
-  comment,
-  photo,
-  post,
-  research,
-  groups,
-  users
-CASCADE;
+DROP TABLE IF EXISTS friend_requests, friend, likes, comment, photo, post, research, groups, users CASCADE;
 
 -- USERS
 CREATE TABLE users (
