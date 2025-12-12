@@ -219,6 +219,22 @@ def list_users_by_avg_likes(cursor, limit=10):
     for username, avg_likes, rank in rows:
         print(f"Rank {rank}: {username} with {avg_likes:.2f} average likes per post")
 
+def users_who_like_their_own_posts(cursor):
+    query = """
+        SELECT u.username, COUNT(*) AS self_likes
+        FROM likes l
+        JOIN post p ON l.post_id = p.post_id
+        JOIN users u ON l.user_id = u.user_id
+        WHERE l.user_id = p.user_id
+        GROUP BY u.username
+        ORDER BY self_likes DESC;
+    """
+    cursor.execute(query)
+    rows = cursor.fetchall()
+    print("\n--- Users Who Like Their Own Posts ---")
+    for username, self_likes in rows:
+        print(f"{username} liked their own posts {self_likes} times")
+
 
 def main():
     parser = argparse.ArgumentParser(description="Social Media CLI Tool for Ayden's DB.")
@@ -236,7 +252,7 @@ def main():
     create_parser.add_argument('--photos', nargs='*', help='List of image paths (space separated).')
     create_parser.add_argument('--publish', action='store_true', help='Immediately publish the post instead of saving as a draft.')
 
-    # post list
+    # post list drafts
     post_subparsers.add_parser('list-drafts', help='List all unpublished drafts for the user.')
 
     # post publish
@@ -256,11 +272,11 @@ def main():
     top_users_parser.add_argument('--limit', type=int, default=10, help='Number of top users to display.')
 
     # average likes per user
-    avg_likes_parser = post_subparsers.add_parser(
-        'avg-likes', help='List users ranked by average likes per post.'
-    )
+    avg_likes_parser = post_subparsers.add_parser('avg-likes', help='List users ranked by average likes per post.')
     avg_likes_parser.add_argument('--limit', type=int, default=10, help='Number of top users to display.')
 
+    # users who like their own posts
+    self_like_parser = post_subparsers.add_parser('self-likes', help="List users who liked their own posts")
 
     args = parser.parse_args()
 
@@ -275,13 +291,7 @@ def main():
 
             if args.command == 'post':
                 if args.post_command == 'create':
-                    create_or_save_draft(
-                        cur,
-                        acting_user_id,
-                        args.description,
-                        args.photos,
-                        args.publish
-                    )
+                    create_or_save_draft(cur, acting_user_id, args.description, args.photos, args.publish)
                 elif args.post_command == 'list-drafts':
                     list_drafts(cur, acting_user_id)
                 elif args.post_command == 'publish-draft':
@@ -292,6 +302,10 @@ def main():
                     list_posts_by_likes(cur, args.limit)
                 elif args.post_command == 'top-users':
                     list_users_by_post_count(cur, args.limit)
+                elif args.post_command == 'avg-likes':
+                    list_users_by_avg_likes(cur, args.limit)
+                elif args.post_command == 'self-likes':
+                    users_who_like_their_own_posts(cur)
 
         # Commit changes
         conn.commit()
