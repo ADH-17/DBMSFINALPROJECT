@@ -1,4 +1,5 @@
-DROP TABLE IF EXISTS friend_requests, friend, likes, comment, photo, post, research, groups, users CASCADE;
+DROP TABLE IF EXISTS friend_requests, friend, likes, comment, photo, post, research, groups, group_membership, users CASCADE;
+
 
 -- USERS
 CREATE TABLE users (
@@ -56,7 +57,7 @@ CREATE TABLE friend (
 -- LIKES (junction between users and posts)
 CREATE TABLE likes (
   user_id  INT NOT NULL REFERENCES users(user_id),
-  post_id  INT NOT NULL REFERENCES post(post_id) ON DELETE CASCADE,
+  post_id  INT NOT NULL REFERENCES post(post_id) ON DELETE CASCADE
 );
 
 -- FRIEND REQUESTS
