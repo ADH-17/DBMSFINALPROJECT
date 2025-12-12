@@ -235,6 +235,28 @@ def users_who_like_their_own_posts(cursor):
     for username, self_likes in rows:
         print(f"{username} liked their own posts {self_likes} times")
 
+def like_post(cursor, user_id, post_id):
+    """
+    Allows a user to like a post.
+    Prevents duplicate likes.
+    """
+    # Check if the user already liked the post
+    cursor.execute(
+        "SELECT 1 FROM likes WHERE user_id = %s AND post_id = %s;",
+        (user_id, post_id)
+    )
+    if cursor.fetchone():
+        print(f"User ID {user_id} has already liked post ID {post_id}.")
+        return
+
+    # Insert the like
+    cursor.execute(
+        "INSERT INTO likes (user_id, post_id) VALUES (%s, %s);",
+        (user_id, post_id)
+    )
+    print(f"User ID {user_id} liked post ID {post_id}.")
+
+
 
 def main():
     parser = argparse.ArgumentParser(description="Social Media CLI Tool for Ayden's DB.")
@@ -278,6 +300,11 @@ def main():
     # users who like their own posts
     self_like_parser = post_subparsers.add_parser('self-likes', help="List users who liked their own posts")
 
+    # Like a post
+    like_parser = post_subparsers.add_parser('like', help='Like a post by ID.')
+    like_parser.add_argument('--post-id', type=int, required=True, help='ID of the post to like.')
+
+
     args = parser.parse_args()
 
     # Handle DB interaction
@@ -306,6 +333,9 @@ def main():
                     list_users_by_avg_likes(cur, args.limit)
                 elif args.post_command == 'self-likes':
                     users_who_like_their_own_posts(cur)
+                elif args.post_command == 'like':
+                    like_post(cur, acting_user_id, args.post_id)
+
 
         # Commit changes
         conn.commit()
